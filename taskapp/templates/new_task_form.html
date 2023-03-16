@@ -1,0 +1,52 @@
+<div class="row" style="min-height: 100vh;">
+  <div class="col-2"></div>
+  <div class="col-8" id="new_taxk_form_content">
+    <div class="d-flex justify-content-between">
+      <div>
+        <h4 class="mb-3">Create New Task</h4>
+      </div>
+      <div>
+        <i class="fa-solid fa-rectangle-xmark fa-2x" id="cancel_newtask"></i>
+      </div>
+    </div>
+    <form action="" method="post" enctype="multipart/form-data" id="create_new_task_form">
+      {% csrf_token %}
+      <div class="mb-3">
+        <input type="text" name="title" class="form-control" placeholder="Task Name" id="task_name" required>
+      </div>
+      <div class="mb-3">
+        <textarea name="desc" cols="30" rows="10" class="form-control" placeholder="Description" id="task_desc" required></textarea>
+      </div>
+      <div class="mb-3">
+        <select name="cat" id="task_cat" required>
+          <option selected disabled hidden value= 'none'>Select Category</option>
+          {% if cat_list %}
+            {% for cat_name in cat_list %}
+            <option value="{{cat_name}}">{{cat_name}}</option>
+            {% endfor %}
+          {% endif %}
+
+        </select>
+      </div>
+      <div class="mb-3">
+        <input type="file" id="task_image" name="task_img" required>
+      </div>
+      <div class="mb-3">
+        <input name="avail_time" type="date" placeholder="Time to do task" class="form-control" id="task_avail_time" required>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <div>
+          <input type="submit" value="Create" class="btn btn-primary" id="new_task_create_btn">
+        </div>
+        <!-- <div>
+          <a class="btn btn-primary" id="cancel_newtask">
+            Cancel
+          </a>
+        </div> -->
+      </div>
+    </form>
+
+
+  </div>
+  <div class="col-2"></div>
+</div>

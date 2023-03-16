@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{%block body_block%}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+          <div class="row">
+            <div class="col-6 left">
+                <div class="row" style="margin-top: 80px; min-height: 100vh;" id="top-left">
+                    <div class="col-12">
+
+                      <div class="row">
+                        <div class="col-0"></div>
+                        <div class="col-12 d-flex justify-content-center">
+                          <div>
+                            <h2 class="text-muted">Tasks</h2>
+                          </div>
+                        </div>
+                        <div class="col-0"></div>
+                      </div>
+                      
+                      {% if  pending_tasks%}
+                        {% for task in pending_tasks %}
+                          <ol class="list-group mb-3 v1" id="{{task.id}}">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="mt-1">
+                                  
+                                    <div>
+                                        <input class="checkboxes" type="checkbox" value="{{task.id}}" id="check{{task.id}}">
+                                    </div>
+                                  
+                                    
+                                </div>  
+                              <div class="ms-2 me-auto">
+    
+                                <div class="fw-bold" id="{{task.id}}b_task_name">{{task.task_name}}</div>
+                                <p style="font-size: x-small; margin:0;">{{task.added_date}}</p>
+                              </div>
+                              <div class="me-5 d-flex align-items-center">
+                                <div class="mt-1">
+                                    <a href="{%url 'todo-details' task.id%}">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-muted"></i>
+                                    </a>
+                                </div>
+                              </div>
+                            </li>
+                          </ol>
+                        {% endfor %}
+                        
+                      {% endif %}
+                      <ul  class="list-group mb-3 v1" id="display-data">
+
+                      </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="col-6 right">
+                <div class="row" style="margin-top: 80px; min-height: 100vh;" id="top-right">
+                    <div class="col-12">
+
+                      <div class="row">
+                        <div class="col-0"></div>
+                        <div class="col-12 d-flex justify-content-center">
+                          <div>
+                            <h2 class="text-muted">Todos</h2>
+                          </div>
+                        </div>
+                        <div class="col-0"></div>
+                      </div>
+                      {% if todos %}
+                        {% for todo in todos %}
+                          <ol class="list-group mb-3 v1" id="{{todo.todo_task.id}}right">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                              
+                              <div class="ms-2 me-auto d-flex">
+                                <div>
+                                  <div class="fw-bold">{{todo.todo_task.task_name}}</div>
+                                  <p style="font-size: x-small; margin:0;">{{todo.todo_task.added_date}}</p>
+
+                                  <!-- here the notes -->
+                                  <div  style="max-width: 100px; display:flex; ">
+                                    <div id="{{todo.id}}task_note">
+                                      {% if todo.todo_note %}
+                                      {{todo.todo_note}}
+                                      {% endif %}
+                                      
+                                      
+                                      
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="mt-1 ms-4">
+                                  <a href="{%url 'todo-todo-details' todo.slug%}">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-muted"></i>
+                                  </a>
+                                </div>
+                              </div>
+                              
+                              <div class="d-flex flex-column">
+                                <div style="align-self: flex-end;" id="{{todo.id}}badge_live">
+                                  <span class="badge  rounded-pill" id="{{todo.id}}badge" 
+                                    style="background-color:{{todo.todo_status.stat_color}};">&nbsp&nbsp&nbsp
+                                  </span>
+                                </div>
+                                <div class="mt-2 d-flex">
+                                  <div class="me-2">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" 
+                                    data-bs-target="#exampleModal{{todo.id}}" style="font-size: xx-small;">
+                                      Note
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal{{todo.id}}" tabindex="-1" aria-labelledby="exampleModalLabel{{todo.id}}" aria-hidden="true">
+                                      <div class="modal-dialog">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel{{todo.id}}">Create Task Note</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                          </div>
+                                          <form action="{%url 'todo-add-task-note' todo.id%}" method="post" id="task_note_form" name="{{todo.id}}" enctype="multipart/form-data">
+                                            {%csrf_token%}
+                                            <div class="modal-body">
+                                                <div>
+                                                  <h2>Add Task Note</h2>
+                                                </div>
+                                                <div class="mb-3">
+                                                  <textarea name="note" id="note{{todo.id}}" cols="15" rows="5" class="form-control" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                              <input type="submit" class="btn btn-primary note_submit_btns" value="Create" data-bs-dismiss="modal" name="{{todo.id}}">
+                                            </div>
+                                          </form>
+
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!-- <input type="submit" value="Note" id="noteBtn1" onclick="taskNotePopup()" 
+                                      class="btn btn-success"                         
+                                      style="font-size: xx-small;"> -->
+                                  </div>
+                                  <div id="{{todo.id}}btn_live_change">
+                                    <div id="{{todo.id}}btn_live">
+                                      <input type="submit" value="{{todo.todo_status}}" id="{{todo.id}}"  
+                                        class="btn btn-primary stat_btns"                         
+                                        style="font-size: xx-small;">
+                                    </div>
+                                  </div>
+
+                                  <!-- <div id="{{todo.id}}btn_live_change">
+
+                                  </div> -->
+                                  
+                                </div>
+                              </div>
+                              
+                            </li>
+                          </ol>
+                        {% endfor %}
+
+                      {% endif %}
+                      <ul  class="list-group mb-3 v1" id="display-todo-data">
+                        
+                      </ul>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        </div>
+        <div class="col-1">
+          <div class="row" style="margin-top: 80px;">
+            <div class="col-12">
+              <a class="btn btn-sm btn-primary" id="new_task_btn" style="font-size: x-small;">
+                <i class="fa-solid fa-plus me-1"></i><span>Task</span>
+              </a>
+
+              <!-- <a class="btn btn-sm btn-primary" id="new_notes_btn" style="font-size: x-small;">
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Notes</span>
+              </a> -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+        <div class="row">
+          <div class="col-1"></div>
+          <div class="col-10" id="new_task_data" style="display: none;">
+            {% include 'new_task_form.html' %}
+          </div>
+          <div class="col-1"></div>
+        </div>
+
+
+        
+    
+    </div>
+{%endblock%}
