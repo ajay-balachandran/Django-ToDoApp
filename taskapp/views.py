@@ -44,7 +44,7 @@ class CreateNewTaskView(View):
         subject = 'Task application new task'
         message = f'A new task: {task_name}, is created by {request.user} in {task_category} category.'
         email_from = settings.EMAIL_HOST_USER
-        recipient_list = ['ajaybalachandran01@gmail.com', ]
+        recipient_list = ['your email id', ]
         send_mail(subject, message, email_from, recipient_list)
         return redirect('todo-home')
 
